@@ -58,7 +58,7 @@ class rfs():
 		nfolds = kwargs["nfolds"] if "nfolds" in KWARGS else 5 
 		if nfolds > np.shape(X)[0]: nfolds = np.shape(X)[0] 
 		reg = kwargs["reg"] if "reg" in KWARGS else "L2"
-		maxSteps = min(np.shape(X)[0], np.shape(X)[1], kwargs["maxSteps"]) if "maxSteps" in KWARGS else min(np.shape(X)[0], np.shape(X)[1])
+		maxSteps = min(np.shape(X)[0], np.shape(X)[1], kwargs["maxSteps"]) if "maxSteps" in KWARGS else min(50, np.shape(X)[0], np.shape(X)[1])
 
 		#Build regression model 
 		self.buildModel(X, Y, Xval, Yval, nfolds, reg, maxSteps)
@@ -150,7 +150,7 @@ class rfs():
 	
 		#Use validation data 
 		else: 
-
+			print(maxSteps)
 			FSsoln = bestsubset.fs(X, Y, maxsteps=maxSteps)
 			step_val_error_list, step_min_sol_coef_list, FSactiveset_list = [], [], []
 			for step in range(2, maxSteps+1): 

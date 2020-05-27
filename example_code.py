@@ -2,7 +2,7 @@ from rFS import rfs
 import numpy as np 
 
 n = 100
-p = 10
+p = 10000
 k = 5
 true_variables = np.sort(np.random.choice([i for i in range(p)], size=k, replace=False))
 true_coefficients = np.zeros(p)
