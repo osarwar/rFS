@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="rFS", 
-    version="0.0.2",
+    version="0.0.3",
     author="Owais Sarwar",
     author_email="osarwar@andrew.cmu.edu",
     description="A tool to build regression models using Regularized Forward Selection",

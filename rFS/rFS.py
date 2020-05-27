@@ -14,7 +14,7 @@ coef = ro.r['coef']
 as_matrix = ro.r['as.matrix']
 predict = ro.r['predict']
 
-class rFS(): 
+class rfs(): 
 
 	def __init__(self, X, Y, **kwargs):
 		"""
@@ -95,7 +95,6 @@ class rFS():
 
 			n = np.shape(X)[0]
 			fs = round(n / nfolds)
-			print(nfolds, n, fs)
 			fold_val_error_list = []
 
 		
@@ -141,10 +140,10 @@ class rFS():
 				FSactiveset -= 1 
 			if opt_lambda != 50: 
 				RegularizedSolution = bestsubset.lasso(X[:, FSactiveset], Y, alpha=alpha)
-				self.B = np.array(as_matrix(bestsubset.coef_lasso(RegularizedSolution))).T[opt_lambda][1:]
+				self.B = np.array(as_matrix(bestsubset.coef_lasso(RegularizedSolution))).T[opt_lambda][1:].flatten()
 				self.B0 = np.array(as_matrix(bestsubset.coef_lasso(RegularizedSolution))).T[opt_lambda][0]
 			else: 
-				self.B = np.array(as_matrix(bestsubset.coef_fs(FSsoln, opt_step)))[FSactiveset+1]
+				self.B = np.array(as_matrix(bestsubset.coef_fs(FSsoln, opt_step)))[FSactiveset+1].flatten()
 				self.B0 = np.array(as_matrix(bestsubset.coef_fs(FSsoln, opt_step)))[0]
 
 			self.regressors = np.sort(FSactiveset[np.sort(np.nonzero(self.B)[0])])
@@ -176,7 +175,7 @@ class rFS():
 				if min(step_val_error) < 1e-10: 
 					break 
 
-			self.B = step_min_sol_coef_list[step_val_error_list.index(min(step_val_error_list))][1:]
+			self.B = step_min_sol_coef_list[step_val_error_list.index(min(step_val_error_list))][1:].flatten()
 			self.B0 = step_min_sol_coef_list[step_val_error_list.index(min(step_val_error_list))][0] 
 			self.regressors = np.sort(FSactiveset_list[step_val_error_list.index(min(step_val_error_list))][np.sort(np.nonzero(self.B)[0])]) 
 
@@ -195,11 +194,11 @@ class rFS():
 			Ypred : 1D numpy array of response predicted at each point 
 		"""
 		#No intercept 
-		if len(self.B) == len(np.shape(X)[1]): 
-			Ypred = X@self.B
+		if self.B0 == 0: 
+			Ypred = X[:, self.regressors]@self.B
 		#If intercept 
 		else: 
-			Ypred = X@self.B + self.B0
+			Ypred = X[:, self.regressors]@self.B + self.B0
 
 		return Ypred 
 
@@ -216,36 +215,4 @@ class rFS():
 
 			Scalar: RMSE value 
 		"""
-		return (sum((Ytest - self.predict(Xtest)**2))/len(np.array(Ytest).flatten()))**(0.5)
-
-
-n = 213
-p = 10
-k = 5
-true_variables = np.sort(np.random.choice([i for i in range(p)], size=k, replace=False))
-true_coefficients = np.zeros(p)
-true_coefficients[true_variables] = 1
-
-# Predictors
-X = np.random.rand(n*2, p)
-Xtrn = X[0:n, :]
-Xval = X[n:2*n, :]
-# Response
-Ytrn = Xtrn@true_coefficients + .5*np.random.randn(n)
-Yval = Xval@true_coefficients + .5*np.random.randn(n)		
-
-print("Btrue: ", true_coefficients)
-print("Regressors: ", true_variables)
-
-fs = rFS(Xtrn, Ytrn, Xval=Xval, Yval=Yval)
-
-
-print("rFS.B: ", fs.B)
-print("rfs.B0: ", fs.B0)
-print("rFS.regressors: ", fs.regressors)
-
-fs = rFS(Xtrn, Ytrn, nfolds=20)
-
-print("rFS.B: ", fs.B)
-print("rfs.B0: ", fs.B0)
-print("rFS.regressors: ", fs.regressors)
+		return (sum((Ytest - self.predict(Xtest))**2)/len(np.array(Ytest).flatten()))**(0.5)
