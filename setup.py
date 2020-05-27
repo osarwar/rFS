@@ -20,5 +20,5 @@ setuptools.setup(
     ],
     install_requires=[
     'numpy>=1.16.1', 
-    'rpy2>=3.3.3'],
+    'rpy2>=2.9.4'],
 )
