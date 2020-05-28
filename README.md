@@ -8,7 +8,7 @@ Scalable python tool for building sparse linear models for regression and classi
 
 Many quantities of interest (Y) can be modeled using linear functions of X, as follows: 
 
-<img src="linmodel.jpg" height="432" width="144">
+<img src="linmodel.jpg" height="210" width="144">
 
 Where *n* is the number of data points and *p* is the number of variables to choose from. Our task is to solve for the values of the coefficients (beta) of these variables. 
 
@@ -16,7 +16,7 @@ This algorithm builds an approximate solution to the following problem regulariz
 
 
 <img src="regbestsubset.jpg" height="144" width="432">
-*k* is an integer that constrains the size of the model selected. 
+*q* is equal to 1 (for lasso-regularization) or 2 (for ridge-regularization). *k* is an integer that constrains the size of the model selected. 
 
 rFS works by first building an initial solution using forward stepwise selection. Then, the variables that are active at each step are regularized using either a lasso-like or ridge-like penalty (as implmented in the R package [glmnet](https://web.stanford.edu/~hastie/glmnet/glmnet_alpha.html). Forward stepwise selection works by including the variable in every step that minimizes the squared error loss, the solution path can be computed very efficiently. The regularization step of rFS is also very quick making the algorithm very scalable. 
 
@@ -37,7 +37,7 @@ pip install rFS
 ``` 
 The following dependencies will also be automatically installed: 
 - [numpy](https://numpy.org/)
-- [rpy2](https://rpy2.github.io/doc/latest/html/index.html] - interface to R in python)
+- [rpy2](https://rpy2.github.io/doc/latest/html/index.html) - interface to R in python
 ## Useage 
 
 ```python 
@@ -82,6 +82,11 @@ print("Prediction: ", model.predict(Xtst))
 print("Test RMSE: ", model.RMSE(Xtst, Ytst))
 
 ```
+### Model attributes 
+
+- `rfs.B`: Coefficients of chosen variables 
+- `rfs.B0`: Intercept of model 
+- `rfs.regressors`: Array of chosen variables 
 
 ## Arugments for `rfs` class initialization
 
