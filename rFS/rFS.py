@@ -58,7 +58,8 @@ class rfs():
 		nfolds = kwargs["nfolds"] if "nfolds" in KWARGS else 5 
 		if nfolds > np.shape(X)[0]: nfolds = np.shape(X)[0] 
 		reg = kwargs["reg"] if "reg" in KWARGS else "L2"
-		maxSteps = min(np.shape(X)[0], np.shape(X)[1], kwargs["maxSteps"]) if "maxSteps" in KWARGS else min(50, np.shape(X)[0], np.shape(X)[1])
+		maxSteps = min(np.shape(X)[0], np.shape(X)[1], kwargs["maxSteps"]) if "maxSteps" in KWARGS \
+		else min(50, np.shape(X)[0], np.shape(X)[1])
 
 		#Build regression model 
 		self.buildModel(X, Y, Xval, Yval, nfolds, reg, maxSteps)
