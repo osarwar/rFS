@@ -1,18 +1,20 @@
 # rFS: Regularized Forward Stepwise Selection (version 0.1)
+*Owais Sarwar and Nick Sahnidis, Carnegie Mellon University* 
 Scalable python tool for building sparse linear models for regression and classification. 
+
 
 ## Overview 
 
 Many quantities of interest (Y) can be modeled using linear functions of X, as follows: 
 
-![The Linear Model](linmodel.jpg=20x100)
+<img src="linmodel.jpg" height="50" width="12">
 
 Where *n* is the number of data points and *p* is the number of variables to choose from. Our task is to solve for the values of the coefficients (beta) of these variables. 
 
 This algorithm builds an approximate solution to the following problem regularized, cardinality-constrained regression/classification problem: 
 
-![Regularized Best Subset Selection](regbestsubset.jpg=100x20)
 
+<img src="regbestsubset.jpg" height="12" width="50">
 *k* is an integer that constrains the size of the model selected. 
 
 rFS works by first building an initial solution using forward stepwise selection. Then, the variables that are active at each step are regularized using either a lasso-like or ridge-like penalty (as implmented in the R package [glmnet](https://web.stanford.edu/~hastie/glmnet/glmnet_alpha.html). Forward stepwise selection works by including the variable in every step that minimizes the squared error loss, the solution path can be computed very efficiently. The regularization step of rFS is also very quick making the algorithm very scalable. 
